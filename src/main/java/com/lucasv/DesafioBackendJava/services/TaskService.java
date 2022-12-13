@@ -19,4 +19,22 @@ public class TaskService {
         return repository.findAll();
     }
 
+    public Task insert(Task obj){
+        return repository.save(obj);
+    }
+
+    public void delete(Long id){
+        repository.deleteById(id);
+    }
+
+    public Task update(Long id, Task obj){
+        Task entity = repository.getReferenceById(id);
+        updateData(entity,obj);
+        return repository.save(entity);
+    }
+
+    private void updateData(Task entity, Task obj) {
+        entity.setDescricao(obj.getDescricao());
+        entity.setTaskStatus(obj.getTaskStatus());
+    }
 }
