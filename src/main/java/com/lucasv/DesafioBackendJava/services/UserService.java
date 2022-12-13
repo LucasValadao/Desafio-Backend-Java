@@ -12,8 +12,14 @@ public class UserService {
 
     @Autowired
     private UserRepository repository;
-
+    
     public User insert(User obj){
+        User existsUser = repository.findByUsername(obj.getName());
+        
+        if(existsUser != null) {
+        throw new exception("Usuario ja existe");
+        }
+        
         return repository.save(obj);
     }
 
