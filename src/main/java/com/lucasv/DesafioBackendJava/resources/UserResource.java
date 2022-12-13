@@ -2,6 +2,7 @@ package com.lucasv.DesafioBackendJava.resources;
 
 import com.lucasv.DesafioBackendJava.entities.User;
 import com.lucasv.DesafioBackendJava.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class UserResource {
     @Autowired
     private UserService service;
     @PostMapping
-    public ResponseEntity<User> insert(@RequestBody User obj) throws Exception {
+    public ResponseEntity<User> insert(@Valid @RequestBody User obj) throws Exception {
         obj = service.insert(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).body(obj);

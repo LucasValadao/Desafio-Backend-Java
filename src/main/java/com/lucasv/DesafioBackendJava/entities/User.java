@@ -1,6 +1,7 @@
 package com.lucasv.DesafioBackendJava.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -11,8 +12,13 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotEmpty(message = "Valor do campo nome nao pode ser nulo ou vazio")
     private String nome;
+    @NotEmpty(message = "Valor do campo email nao pode ser nulo ou vazio")
+    @Email
     private String email;
+    @Pattern(regexp = "(?=^.{6,10}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\\s).*$",
+            message = "“Senha não corresponde aos requisitos mínimos de segurança. A senha deve conter letras maiúsculas, minúsculas, números e pelo menos 1 caractere especial")
     private String senha;
 
     public User(){
