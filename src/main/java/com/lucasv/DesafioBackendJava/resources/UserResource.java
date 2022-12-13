@@ -18,7 +18,7 @@ public class UserResource {
     @Autowired
     private UserService service;
     @PostMapping
-    public ResponseEntity<User> insert(@RequestBody User obj){
+    public ResponseEntity<User> insert(@RequestBody User obj) throws Exception {
         obj = service.insert(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).body(obj);
