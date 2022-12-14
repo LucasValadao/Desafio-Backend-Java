@@ -28,7 +28,13 @@ security:
       expire-length: 900000
 
 UserResource:
-  signin: Authenticates user and returns its JWT token.
-  signup: Creates user and returns its JWT token
-  search: Returns specific user by username
-  me: Returns current user's data
+  signin: Autentica o usuario e retorna o JWT Token
+  signup: Cria o usuario e retorna o JWT Token
+  search: Retorna um usuario especifico pelo username
+  me: Retorna os dados atuais do usuario
+
+TaskResource:
+  findAll: Retorna todas as tarefas
+  insert: Insere uma tarefa
+  update: Atualiza uma tarefa
+  delete: Deleta uma tarefa
