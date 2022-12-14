@@ -1,8 +1,7 @@
 package com.lucasv.DesafioBackendJava.entities;
 
 import com.lucasv.DesafioBackendJava.entities.enums.TaskStatus;
-import jakarta.persistence.*;
-
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 

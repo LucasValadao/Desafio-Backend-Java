@@ -28,7 +28,7 @@ public class TaskService {
     }
 
     public Task update(Long id, Task obj){
-        Task entity = repository.getReferenceById(id);
+        Task entity = repository.getById(id);
         updateData(entity,obj);
         return repository.save(entity);
     }

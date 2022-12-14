@@ -1,7 +1,6 @@
 package com.lucasv.DesafioBackendJava.security;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,16 +29,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()//
-                .antMatchers("/users/signin").permitAll()//
-                .antMatchers("/users/signup").permitAll()//
+                .antMatchers("/users/signin").permitAll()
+                .antMatchers("/users/insert").permitAll()
                 .antMatchers("/h2-console/**/**").permitAll()
-                // Disallow everything else..
                 .anyRequest().authenticated();
 
         http.exceptionHandling().accessDeniedPage("/login");
 
         http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
 
+        //teste da api em browser
+        //http.httpBasic();
 
     }
 

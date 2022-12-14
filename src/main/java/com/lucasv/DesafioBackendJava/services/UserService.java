@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.lucasv.DesafioBackendJava.repositories.UserRepository;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -24,26 +26,42 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
     
-    public User insert(User obj) throws Exception {
+    public String insert(User obj) {
         User existsUser = repository.findByEmail(obj.getEmail());
         
         if(existsUser != null) {
-        throw new Exception("Usuario ja existe");
+        throw new CustomException("Usuario ja existe",HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
-        String hashSenha = new BCryptPasswordEncoder().encode(obj.getSenha());
-        obj.setSenha(hashSenha);
-
-        return repository.save(obj);
+        String hashSenha = new BCryptPasswordEncoder().encode(obj.getPassword());
+        obj.setPassword(hashSenha);
+        repository.save(obj);
+        return jwtTokenProvider.createToken(obj.getUsername(),obj.getUserRoles());
     }
 
     public String signin(String username, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            return jwtTokenProvider.createToken(username, repository.findByUsername(username).getAppUserRoles());
+            return jwtTokenProvider.createToken(username, repository.findByUsername(username).getUserRoles());
         } catch (AuthenticationException e) {
             throw new CustomException("Usuario/senha invalido", HttpStatus.UNPROCESSABLE_ENTITY);
         }
+    }
+
+    public User search(String username) {
+        User user = repository.findByUsername(username);
+        if (user == null) {
+            throw new CustomException("The user doesn't exist", HttpStatus.NOT_FOUND);
+        }
+        return user;
+    }
+
+    public User whoami(HttpServletRequest req) {
+        return repository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+    }
+
+    public String refresh(String username) {
+        return jwtTokenProvider.createToken(username, repository.findByUsername(username).getUserRoles());
     }
 
 }
