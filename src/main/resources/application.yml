@@ -19,7 +19,7 @@ spring:
           new_generator_mappings: false
 
 server:
-  port: 8080 # This is the default port anyway, but you can change it here
+  port: 8080
 
 security:
   jwt:
@@ -27,9 +27,8 @@ security:
       secret-key: secret-key
       expire-length: 900000
 
-UserController:
+UserResource:
   signin: Authenticates user and returns its JWT token.
   signup: Creates user and returns its JWT token
-  delete: Deletes specific user by username
   search: Returns specific user by username
   me: Returns current user's data

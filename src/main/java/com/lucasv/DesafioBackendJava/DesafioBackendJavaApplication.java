@@ -3,6 +3,9 @@ package com.lucasv.DesafioBackendJava;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.lucasv.DesafioBackendJava.entities.Task;
+import com.lucasv.DesafioBackendJava.entities.enums.TaskStatus;
+import com.lucasv.DesafioBackendJava.repositories.TaskRepository;
 import com.lucasv.DesafioBackendJava.services.UserService;
 import lombok.RequiredArgsConstructor;
 import com.lucasv.DesafioBackendJava.entities.User;
@@ -18,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 public class DesafioBackendJavaApplication implements CommandLineRunner{
 
 	final UserService userService;
+	final TaskRepository taskRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(DesafioBackendJavaApplication.class, args);
@@ -36,7 +40,7 @@ public class DesafioBackendJavaApplication implements CommandLineRunner{
 		admin.setEmail("admin@email.com");
 		admin.setUserRoles(new ArrayList<UserRole>(Arrays.asList(UserRole.ROLE_ADMIN)));
 
-		userService.insert(admin);
+		userService.signup(admin);
 
 		User client = new User();
 		client.setUsername("client");
@@ -44,7 +48,13 @@ public class DesafioBackendJavaApplication implements CommandLineRunner{
 		client.setEmail("client@email.com");
 		client.setUserRoles(new ArrayList<UserRole>(Arrays.asList(UserRole.ROLE_CLIENT)));
 
-		userService.insert(client);
+		userService.signup(client);
+
+		Task task = new Task();
+		task.setDescricao("Teste123");
+		task.setTaskStatus(TaskStatus.ALTO);
+		taskRepository.save(task);
+
 	}
 
 }

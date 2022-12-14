@@ -5,15 +5,12 @@ import com.lucasv.DesafioBackendJava.exception.CustomException;
 import com.lucasv.DesafioBackendJava.repositories.UserRepository;
 import com.lucasv.DesafioBackendJava.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.lucasv.DesafioBackendJava.repositories.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,19 +22,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
-    
-    public String insert(User obj) {
-        User existsUser = repository.findByEmail(obj.getEmail());
-        
-        if(existsUser != null) {
-        throw new CustomException("Usuario ja existe",HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-
-        String hashSenha = new BCryptPasswordEncoder().encode(obj.getPassword());
-        obj.setPassword(hashSenha);
-        repository.save(obj);
-        return jwtTokenProvider.createToken(obj.getUsername(),obj.getUserRoles());
-    }
 
     public String signin(String username, String password) {
         try {
@@ -48,10 +32,22 @@ public class UserService {
         }
     }
 
+    public String signup(User user) {
+        if (!repository.existsByUsername(user.getUsername())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            repository.save(user);
+            return jwtTokenProvider.createToken(user.getUsername(), user.getUserRoles());
+        } else {
+            throw new CustomException("Nome de usuario ja esta em uso", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+
+
     public User search(String username) {
         User user = repository.findByUsername(username);
         if (user == null) {
-            throw new CustomException("The user doesn't exist", HttpStatus.NOT_FOUND);
+            throw new CustomException("Usuario nao existe", HttpStatus.NOT_FOUND);
         }
         return user;
     }
