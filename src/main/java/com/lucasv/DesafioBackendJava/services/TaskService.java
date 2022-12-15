@@ -33,6 +33,16 @@ public class TaskService {
 
     private void updateData(Task entity, Task obj) {
         entity.setDescricao(obj.getDescricao());
+        entity.setTaskPriorityStatus(obj.getTaskPriorityStatus());
+    }
+
+    public Task updateStatus(Long id, Task obj){
+        Task entity = repository.getById(id);
+        updateDataStatus(entity,obj);
+        return repository.save(entity);
+    }
+
+    private void updateDataStatus(Task entity, Task obj){
         entity.setTaskStatus(obj.getTaskStatus());
     }
 }

@@ -34,7 +34,8 @@ UserResource:
   me: Retorna os dados atuais do usuario
 
 TaskResource:
-  findAll: Retorna todas as tarefas
+  listTasks: Retorna as tarefas não concluidas e filtra pela prioridade
   insert: Insere uma tarefa
   update: Atualiza uma tarefa
+  updateStatus: Atualiza o status de conclusao de uma tarefa
   delete: Deleta uma tarefa

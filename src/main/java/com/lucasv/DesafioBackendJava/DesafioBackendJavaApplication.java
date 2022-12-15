@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.lucasv.DesafioBackendJava.entities.Task;
+import com.lucasv.DesafioBackendJava.entities.enums.TaskPriorityStatus;
 import com.lucasv.DesafioBackendJava.entities.enums.TaskStatus;
 import com.lucasv.DesafioBackendJava.repositories.TaskRepository;
 import com.lucasv.DesafioBackendJava.services.UserService;
@@ -52,8 +53,15 @@ public class DesafioBackendJavaApplication implements CommandLineRunner{
 
 		Task task = new Task();
 		task.setDescricao("Teste123");
-		task.setTaskStatus(TaskStatus.ALTO);
+		task.setTaskStatus(TaskStatus.NAO_CONCLUIDO);
+		task.setTaskPriorityStatus(TaskPriorityStatus.ALTO);
 		taskRepository.save(task);
+
+		Task task1 = new Task();
+		task1.setDescricao("Teste321");
+		task1.setTaskStatus(TaskStatus.CONCLUIDO);
+		task1.setTaskPriorityStatus(TaskPriorityStatus.MEDIO);
+		taskRepository.save(task1);
 
 	}
 

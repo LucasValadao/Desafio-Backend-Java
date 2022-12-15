@@ -1,7 +1,6 @@
 package com.lucasv.DesafioBackendJava.entities.enums;
 
 public enum TaskStatus {
-    ALTO,
-    MEDIO,
-    BAIXO;
+    NAO_CONCLUIDO,
+    CONCLUIDO;
 }

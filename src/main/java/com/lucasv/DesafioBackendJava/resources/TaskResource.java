@@ -1,6 +1,8 @@
 package com.lucasv.DesafioBackendJava.resources;
 
 import com.lucasv.DesafioBackendJava.entities.Task;
+import com.lucasv.DesafioBackendJava.entities.enums.TaskPriorityStatus;
+import com.lucasv.DesafioBackendJava.entities.enums.TaskStatus;
 import com.lucasv.DesafioBackendJava.services.TaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Api(tags = "tasks")
@@ -20,10 +23,14 @@ public class TaskResource {
     @Autowired
     private TaskService service;
 
-    @GetMapping
-    @ApiOperation(value = "${TaskResource.findAll}")
-    public ResponseEntity<List<Task>> findAll(){
-        List<Task> list = service.findAll();
+    @GetMapping(value = "/{taskps}")
+    @ApiOperation(value = "${TaskResource.listTasks}")
+    public ResponseEntity<List<Task>> listTasks(@PathVariable("taskps") TaskPriorityStatus taskPriorityStatus){
+        if(taskPriorityStatus!=null){
+            List<Task> list = service.findAll().stream().filter(x -> x.getTaskStatus() != TaskStatus.CONCLUIDO && x.getTaskPriorityStatus()==taskPriorityStatus).collect(Collectors.toList());
+            return ResponseEntity.ok().body(list);
+        }
+        List<Task> list = service.findAll().stream().filter(x -> x.getTaskStatus() != TaskStatus.CONCLUIDO).collect(Collectors.toList());
         return ResponseEntity.ok().body(list);
     }
 
@@ -46,6 +53,13 @@ public class TaskResource {
     @ApiOperation(value = "${TaskResource.update}")
     public ResponseEntity<Task> update(@PathVariable Long id, @RequestBody Task obj){
         obj = service.update(id, obj);
+        return ResponseEntity.ok().body(obj);
+    }
+
+    @PutMapping("/status/{id}")
+    @ApiOperation(value = "${TaskResource.updateStatus}")
+    public ResponseEntity<Task> updateStatus(@PathVariable Long id, @RequestBody Task obj){
+        obj = service.updateStatus(id,obj);
         return ResponseEntity.ok().body(obj);
     }
 }
